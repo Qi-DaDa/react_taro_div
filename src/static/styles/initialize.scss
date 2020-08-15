@@ -1,0 +1,42 @@
+$color-brand: #a0d911; // 主题色
+
+@mixin flex_between {
+  display: flex;
+  justify-content: space-between;
+}
+
+view,
+text {
+  box-sizing: border-box;
+}
+
+// 自定义全局class
+.one_line {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.two_line {
+  text-overflow: -o-ellipsis-lastline;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+}
+
+.flex_between {
+  @include flex_between;
+}
+
+.font_color {
+  color: $color-brand;
+}
+
+.back_up {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 999;
+}
