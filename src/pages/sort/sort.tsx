@@ -23,6 +23,70 @@ const ZqSort: React.FunctionComponent<any> = props => {
       <AtButton type="primary" onClick={onSkip}>
         来
       </AtButton>
+      <View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      <View> 1111</View>
+      </View>
     </View>
   );
 };

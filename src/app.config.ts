@@ -14,7 +14,7 @@ export default {
     navigationBarTextStyle: "white", // 头部导航栏字体颜色
     navigationBarTitleText: "Div", // 导航栏标题文字内容
     // disableScroll: true
-    enablePullDownRefresh: true
+    // enablePullDownRefresh:false
   },
   // 导航
   tabBar: {

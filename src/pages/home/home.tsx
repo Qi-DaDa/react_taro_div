@@ -5,19 +5,56 @@
  * @FilePath: \myTaro\src\pages\home\home.tsx
  * @Description: 首页-导航
  */
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import Taro from "@tarojs/taro";
-import { View, Text, Swiper, SwiperItem, ScrollView } from "@tarojs/components";
-import { AtSearchBar, AtNoticebar, AtTabs, AtGrid } from "taro-ui";
+import {
+  View,
+  Text,
+  Swiper,
+  SwiperItem,
+  ScrollView,
+  Image
+} from "@tarojs/components";
+import {
+  AtSearchBar,
+  AtNoticebar,
+  AtTabs,
+  AtGrid,
+  AtActivityIndicator
+} from "taro-ui";
+import { GET } from "../../service/network";
+import CustomLoading from "../../components/CustomLoading";
 import GoodList from "../../components/goodsList";
 
 const ZqHome: React.FunctionComponent<any> = props => {
-  const [tabNavKey, setTabNavKey] = useState(0);
+  const [tabNavKey, setTabNavKey] = useState(0); // tabs 选择
+  const [IsTopReach, setIsTopReach] = useState(false); // 是否下拉刷新
+  const [IsBottomReach, setIsBottomReach] = useState(false); // 是否下拉刷新
+  const [swiperData, setSwiperData] = useState([]); // 轮播图数据
+
+  useEffect(() => {
+    GET({
+      url: "https://api-hmugo-web.itheima.net/api/public/v1/home/swiperdata",
+      params: {},
+      isLoading: true,
+      success: res => {
+        setSwiperData(res.message);
+      },
+      fail: res => {
+        Taro.showToast({
+          title: res.meta.msg || "",
+          icon: "none",
+          duration: 2000
+        });
+      }
+    });
+  }, []);
   const onSkip = () => {
     Taro.navigateTo({
       url: "/pages/search/search"
     });
   };
+
   /**
    * @description: tab导航切换
    * @param {type}
@@ -28,13 +65,23 @@ const ZqHome: React.FunctionComponent<any> = props => {
   return (
     <View>
       <View onClick={onSkip}>
-        <AtSearchBar
-          disabled
-          title="深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个"
-          onChange={() => {}}
-        />
+        <AtSearchBar disabled value="" onChange={() => {}} />
       </View>
-      <ScrollView scrollY scrollWithAnimation scrollTop={0}>
+      <ScrollView
+        style={{ height: "calc(100vh - 40px)" }}
+        scrollY
+        scrollWithAnimation
+        refresherEnabled={true} // 是否允许下拉
+        refresherBackground="#a0d911" // 下拉刷新样式
+        refresherTriggered={true} // 设置当前下拉刷新状态，true 表示下拉刷新已经被触发，false 表示下拉刷新未被触发
+        onRefresherRefresh={() => console.log("自定义下拉刷新被触发")} // 自定义下拉刷新被触发
+        onScrollToLower={() => {
+          console.log("低部");
+          setIsBottomReach(true);
+        }} // 到达底部
+        onScrollToUpper={() => console.log("顶部")} // 回到顶部
+        onRefresherRestore={() => console.log("自定义下拉刷新被复位")} // 自定义下拉刷新被复位
+      >
         <AtNoticebar icon="volume-plus" marquee>
           这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏
         </AtNoticebar>
@@ -45,12 +92,14 @@ const ZqHome: React.FunctionComponent<any> = props => {
           circular
           autoplay
         >
-          <SwiperItem style={{ background: "#faad14" }}></SwiperItem>
-          <SwiperItem style={{ background: "#fadb14" }}></SwiperItem>
-          <SwiperItem style={{ background: "#52c41a" }}></SwiperItem>
-          <SwiperItem style={{ background: "#1890ff" }}></SwiperItem>
+          {swiperData.map(item => (
+            <SwiperItem key={item.goods_id}>
+              <Image src={item.image_src} mode="widthFix" />
+            </SwiperItem>
+          ))}
         </Swiper>
-        <AtTabs
+        {IsTopReach && <CustomLoading />}
+        {/* <AtTabs
           current={tabNavKey}
           animated={false}
           onClick={onTabNav}
@@ -59,8 +108,7 @@ const ZqHome: React.FunctionComponent<any> = props => {
             { title: "卡片拼装" },
             { title: "标签页3" }
           ]}
-        />
-
+        /> */}
         <GoodList
           dataList={[
             {
@@ -68,7 +116,7 @@ const ZqHome: React.FunctionComponent<any> = props => {
                 "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/94920-11_TARMAC-SL7-PRO-ETAP-ABLN-SPCTFLR_HERO_1600x.jpg?v=1595947864",
               price: "9999",
               title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个领取中心"
+                "123深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个领取中心"
             },
             {
               src:
@@ -107,6 +155,8 @@ const ZqHome: React.FunctionComponent<any> = props => {
             }
           ]}
         />
+
+        {IsBottomReach && <CustomLoading />}
       </ScrollView>
     </View>
   );
