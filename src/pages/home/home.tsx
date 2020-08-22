@@ -31,6 +31,7 @@ const ZqHome: React.FunctionComponent<any> = props => {
   const [IsTopReach, setIsTopReach] = useState(false); // 是否下拉刷新
   const [IsBottomReach, setIsBottomReach] = useState(false); // 是否下拉刷新
   const [swiperData, setSwiperData] = useState([]); // 轮播图数据
+  const [productList, setProductList] = useState([]); // 列表数据
 
   useEffect(() => {
     GET({
@@ -39,6 +40,21 @@ const ZqHome: React.FunctionComponent<any> = props => {
       isLoading: true,
       success: res => {
         setSwiperData(res.message);
+      },
+      fail: res => {
+        Taro.showToast({
+          title: res.meta.msg || "",
+          icon: "none",
+          duration: 2000
+        });
+      }
+    });
+    GET({
+      url: "https://api-hmugo-web.itheima.net/api/public/v1/home/floordata",
+      params: {},
+      isLoading: true,
+      success: res => {
+        setProductList(res.message);
       },
       fail: res => {
         Taro.showToast({
@@ -109,52 +125,12 @@ const ZqHome: React.FunctionComponent<any> = props => {
             { title: "标签页3" }
           ]}
         /> */}
-        <GoodList
-          dataList={[
-            {
-              src:
-                "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/94920-11_TARMAC-SL7-PRO-ETAP-ABLN-SPCTFLR_HERO_1600x.jpg?v=1595947864",
-              price: "9999",
-              title:
-                "123深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个领取中心"
-            },
-            {
-              src:
-                "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/94920-00_TARMAC-SL7-SW-DI2-FLORED-TARBLK-WHT_HERO_1600x.jpg?v=1595948513",
-              price: "9999",
-              title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个找折扣"
-            },
-            {
-              src:
-                "https://cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/94421-60_ROUBAIX-SPORT-FLKSIL-BLK_HERO_1600x.jpg?v=1594094145",
-              price: "9999",
-              title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个领会员"
-            },
-            {
-              src:
-                "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/90621-52_TARMAC-SL6-COMP-FSTGRN-FLKSIL_HERO_1600x.jpg?v=1594090736",
-              price: "9999",
-              title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个新品首发"
-            },
-            {
-              src:
-                "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/90621-71_TARMAC-SL6-RSBRY-CMLN_HERO_1600x.jpg?v=1594108441",
-              price: "9999",
-              title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个领京豆"
-            },
-            {
-              src:
-                "//cdn.shopifycdn.net/s/files/1/0253/8697/5295/products/94421-30_ROUBAIX-EXPERT-BLSH-BLK_HERO_1600x.jpg?v=1594093939",
-              price: "9999",
-              title:
-                "深刻搭街坊看到撒旦看风景卢卡斯金卡警方打算离开是圣诞快乐房价离开的法国进口粮食了多少康复机构两块的方式立刻撒旦发个将来肯定是个手机馆"
-            }
-          ]}
-        />
+        {productList && productList.length
+          ? productList.map(item => {
+              console.log(item);
+              return <GoodList dataList={item.product_list || []} />;
+            })
+          : null}
 
         {IsBottomReach && <CustomLoading />}
       </ScrollView>
