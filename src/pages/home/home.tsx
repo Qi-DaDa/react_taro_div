@@ -1,8 +1,8 @@
 /*
  * @LastEditors: 七大大
  * @Date: 2020-07-28
- * @LastEditTime: 2020-08-11
- * @FilePath: \myTaro\src\pages\home\home.tsx
+ * @LastEditTime: 2020-08-23
+ * @FilePath: \myantdd:\products\react_taro_div\src\pages\home\home.tsx
  * @Description: 首页-导航
  */
 import React, { useState, useEffect } from "react";
@@ -19,21 +19,26 @@ import {
   AtSearchBar,
   AtNoticebar,
   AtTabs,
+  AtActivityIndicator,
+  AtTabBar,
+  AtTabsPane,
   AtGrid,
-  AtActivityIndicator
+  AtCard
 } from "taro-ui";
 import { GET } from "../../service/network";
 import CustomLoading from "../../components/CustomLoading";
 import GoodList from "../../components/goodsList";
+import styles from "./home.module.scss";
 
 const ZqHome: React.FunctionComponent<any> = props => {
-  const [tabNavKey, setTabNavKey] = useState(0); // tabs 选择
   const [IsTopReach, setIsTopReach] = useState(false); // 是否下拉刷新
   const [IsBottomReach, setIsBottomReach] = useState(false); // 是否下拉刷新
   const [swiperData, setSwiperData] = useState([]); // 轮播图数据
-  const [productList, setProductList] = useState([]); // 列表数据
+  const [productList, setProductList] = useState([]); // 楼层数据
+  const [navlist, setNavlist] = useState([]); // 导航数据
 
   useEffect(() => {
+    // 获取轮播图
     GET({
       url: "https://api-hmugo-web.itheima.net/api/public/v1/home/swiperdata",
       params: {},
@@ -49,9 +54,9 @@ const ZqHome: React.FunctionComponent<any> = props => {
         });
       }
     });
+    // 获取楼层
     GET({
       url: "https://api-hmugo-web.itheima.net/api/public/v1/home/floordata",
-      params: {},
       isLoading: true,
       success: res => {
         setProductList(res.message);
@@ -71,13 +76,6 @@ const ZqHome: React.FunctionComponent<any> = props => {
     });
   };
 
-  /**
-   * @description: tab导航切换
-   * @param {type}
-   */
-  const onTabNav = info => {
-    setTabNavKey(info);
-  };
   return (
     <View>
       <View onClick={onSkip}>
@@ -115,23 +113,61 @@ const ZqHome: React.FunctionComponent<any> = props => {
           ))}
         </Swiper>
         {IsTopReach && <CustomLoading />}
-        {/* <AtTabs
-          current={tabNavKey}
-          animated={false}
-          onClick={onTabNav}
-          tabList={[
-            { title: "积木拼装" },
-            { title: "卡片拼装" },
-            { title: "标签页3" }
-          ]}
-        /> */}
+        {console.log(
+          navlist.map(item => ({
+            title: item.name,
+            image: item.image_src
+          }))
+        )}
+
         {productList && productList.length
           ? productList.map(item => {
               console.log(item);
-              return <GoodList dataList={item.product_list || []} />;
+              return (
+                <View className={styles.fool_productNav}>
+                  <View className={styles.fool_title}>
+                    <Image src={item.floor_title.image_src} mode="widthFix" />
+                  </View>
+                  <View className={`${styles.fool_content} at-row`}>
+                    <View className="at-col">
+                      <Image
+                        src={item.product_list[0].image_src}
+                        mode="widthFix"
+                      />
+                    </View>
+                    <View className="at-col">
+                      <View>
+                        <Image
+                          src={item.product_list[1].image_src}
+                          mode="widthFix"
+                        />
+                      </View>
+                      <View>
+                        <Image
+                          src={item.product_list[2].image_src}
+                          mode="widthFix"
+                        />
+                      </View>
+                    </View>
+                    <View className="at-col">
+                      <View>
+                        <Image
+                          src={item.product_list[3].image_src}
+                          mode="widthFix"
+                        />
+                      </View>
+                      <View>
+                        <Image
+                          src={item.product_list[4].image_src}
+                          mode="widthFix"
+                        />
+                      </View>
+                    </View>
+                  </View>
+                </View>
+              );
             })
           : null}
-
         {IsBottomReach && <CustomLoading />}
       </ScrollView>
     </View>

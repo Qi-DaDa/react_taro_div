@@ -1,0 +1,30 @@
+.fool_productNav {
+  padding: 0 10px;
+
+  .fool_title {
+    // padding: 15px 0;
+  }
+
+  .fool_content {
+
+    &>view:nth-child(1),
+    &>view:nth-child(2) {
+      margin-right: 10px;
+    }
+
+    // view:nth-child(2) {
+    //   margin: 10px;
+    // }
+  }
+
+
+
+  .fool_content {
+
+    image {
+      width: 100%;
+    }
+
+  }
+
+}

@@ -1,8 +1,8 @@
 /*
  * @LastEditors: 七大大
  * @Date: 2020-08-04
- * @LastEditTime: 2020-08-04
- * @FilePath: \myTaro\src\components\goodsList\index.tsx
+ * @LastEditTime: 2020-08-23
+ * @FilePath: \myantdd:\products\react_taro_div\src\components\goodsList\index.tsx
  * @Description: 商品列表
  */
 import React from "react";
@@ -12,8 +12,6 @@ import styles from "./index.module.scss";
 
 const GoodList = props => {
   const { dataList } = props;
-  console.log(dataList);
-
   return (
     <View className={styles.goods_container}>
       {dataList && dataList.length ? (
