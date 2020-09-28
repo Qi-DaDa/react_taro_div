@@ -1,7 +1,7 @@
 /*
  * @LastEditors: 七大大
  * @Date: 2020-07-28
- * @LastEditTime: 2020-08-23
+ * @LastEditTime: 2020-09-01
  * @FilePath: \myantdd:\products\react_taro_div\src\pages\home\home.tsx
  * @Description: 首页-导航
  */
@@ -18,12 +18,12 @@ import {
 import {
   AtSearchBar,
   AtNoticebar,
-  AtTabs,
+  AtDivider,
   AtActivityIndicator,
   AtTabBar,
   AtTabsPane,
   AtGrid,
-  AtCard
+  AtMessage
 } from "taro-ui";
 import { GET } from "../../service/network";
 import CustomLoading from "../../components/CustomLoading";
@@ -31,8 +31,9 @@ import GoodList from "../../components/goodsList";
 import styles from "./home.module.scss";
 
 const ZqHome: React.FunctionComponent<any> = props => {
-  const [IsTopReach, setIsTopReach] = useState(false); // 是否下拉刷新
+  const [refresherTriggered, setRefresherTriggered] = useState(false); // 是否下拉刷新
   const [IsBottomReach, setIsBottomReach] = useState(false); // 是否下拉刷新
+  const [isFinish, setIsFinish] = useState(false); // 没有更多
   const [swiperData, setSwiperData] = useState([]); // 轮播图数据
   const [productList, setProductList] = useState([]); // 楼层数据
   const [navlist, setNavlist] = useState([]); // 导航数据
@@ -70,6 +71,25 @@ const ZqHome: React.FunctionComponent<any> = props => {
       }
     });
   }, []);
+  // 上拉刷新
+  const onScrollToLower = e => {
+    setIsBottomReach(true);
+    setIsFinish(false);
+    setTimeout(() => {
+      setIsBottomReach(false);
+      setIsFinish(true);
+    }, 2000);
+  };
+  // 下拉刷新
+  const onRefresherRefresh = info => {
+    setRefresherTriggered(true);
+    setTimeout(() => {
+      setRefresherTriggered(false);
+      Taro.atMessage({
+        message: "刷新成功"
+      });
+    }, 2000);
+  };
   const onSkip = () => {
     Taro.navigateTo({
       url: "/pages/search/search"
@@ -87,14 +107,11 @@ const ZqHome: React.FunctionComponent<any> = props => {
         scrollWithAnimation
         refresherEnabled={true} // 是否允许下拉
         refresherBackground="#a0d911" // 下拉刷新样式
-        refresherTriggered={true} // 设置当前下拉刷新状态，true 表示下拉刷新已经被触发，false 表示下拉刷新未被触发
-        onRefresherRefresh={() => console.log("自定义下拉刷新被触发")} // 自定义下拉刷新被触发
-        onScrollToLower={() => {
-          console.log("低部");
-          setIsBottomReach(true);
-        }} // 到达底部
-        onScrollToUpper={() => console.log("顶部")} // 回到顶部
-        onRefresherRestore={() => console.log("自定义下拉刷新被复位")} // 自定义下拉刷新被复位
+        refresherTriggered={refresherTriggered} // 设置当前下拉刷新状态，true 表示下拉刷新已经被触发，false 表示下拉刷新未被触发
+        onRefresherRefresh={onRefresherRefresh} // 自定义下拉刷新被触发
+        onScrollToLower={onScrollToLower} // 到达底部
+        // onScrollToUpper={() => console.log("顶部")} // 回到顶部
+        // onRefresherRestore={() => console.log("自定义下拉刷新被复位")} // 自定义下拉刷新被复位
       >
         <AtNoticebar icon="volume-plus" marquee>
           这是 NoticeBar 通告栏，这是 NoticeBar 通告栏，这是 NoticeBar 通告栏
@@ -112,17 +129,8 @@ const ZqHome: React.FunctionComponent<any> = props => {
             </SwiperItem>
           ))}
         </Swiper>
-        {IsTopReach && <CustomLoading />}
-        {console.log(
-          navlist.map(item => ({
-            title: item.name,
-            image: item.image_src
-          }))
-        )}
-
         {productList && productList.length
           ? productList.map(item => {
-              console.log(item);
               return (
                 <View className={styles.fool_productNav}>
                   <View className={styles.fool_title}>
@@ -168,7 +176,8 @@ const ZqHome: React.FunctionComponent<any> = props => {
               );
             })
           : null}
-        {IsBottomReach && <CustomLoading />}
+        <CustomLoading isOpened={IsBottomReach} isFinish={isFinish} />
+        <AtMessage />
       </ScrollView>
     </View>
   );
